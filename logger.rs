@@ -26,8 +26,7 @@ fn main() {
 
     let username = env::var("USER").unwrap();
     let mut file = String::new();
-    file.push_str("/home/");
-    file.push_str(&username);
-    file.push_str("/log.txt");
-    std::fs::write(file, buffer).unwrap();
+file.push_str("src/log/log.txt");
+std::fs::write(file, buffer).unwrap();
+
 }
